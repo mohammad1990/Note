@@ -26,41 +26,46 @@ public class DetailActivity extends AppCompatActivity {
     private ActionMode mActionMode;
     NoteDBHelper db = new NoteDBHelper(DetailActivity.this);
     Note n;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_layout);
-        editText_title =(EditText)findViewById(R.id.title_content);
-        editText_content=(EditText)findViewById(R.id.content_content);
+        editText_title = (EditText) findViewById(R.id.title_content);
+        editText_content = (EditText) findViewById(R.id.content_content);
 
-   editText_content.addTextChangedListener(new TextWatcher() {
-       @Override
-       public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-       @Override
-       public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        editText_content.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-       @Override
-       public void afterTextChanged(Editable s) {
-           mActionMode = startSupportActionMode(mActioModeCallBack);
-       }
-   });
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
-        textView_date=(TextView)findViewById(R.id.date_content);
+            @Override
+            public void afterTextChanged(Editable s) {
+                mActionMode = startSupportActionMode(mActioModeCallBack);
+            }
+        });
+
+        textView_date = (TextView) findViewById(R.id.date_content);
         Intent i = getIntent();
-         n = i.getParcelableExtra("note");
-        if(n!=null) {
+        n = i.getParcelableExtra("note");
+        if (n != null) {
             editText_title.setText(n.getTitle());
             editText_content.setText(n.getNoteContain());
             textView_date.setText(Utility.convertDToS(n.getDate()));
             //textView_date.setText(n.getId()+"");
         }
     }
+
     ActionMode.Callback mActioModeCallBack =
             new ActionMode.Callback() {
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 
-                    getMenuInflater().inflate(R.menu.contextmenu,menu);
+                    getMenuInflater().inflate(R.menu.contextmenu, menu);
 
                     return true;
                 }
@@ -75,26 +80,25 @@ public class DetailActivity extends AppCompatActivity {
                     Intent i;
                     switch (item.getItemId()) {
                         case R.id.saveDoc:
-                            if(n==null) {
-                            boolean re= db.insertContact(editText_title.getText().toString(), editText_content.getText().toString(), Utility.getCurrentlyDate());
-                                if(re)
-                                Toast.makeText(DetailActivity.this,"your Date is saved",Toast.LENGTH_LONG).show();
-                                else
-                                    Toast.makeText(DetailActivity.this,"your Date did not saved pleased try again",Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                boolean re= db.updateContact(n.getId(),editText_title.getText().toString(), editText_content.getText().toString(), Utility.getCurrentlyDate());
+                            if (n == null) {
+                                boolean re = db.insertContact(editText_title.getText().toString(), editText_content.getText().toString(), Utility.getCurrentlyDate());
                                 if (re)
-                                    Toast.makeText(DetailActivity.this,"your Date is update",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(DetailActivity.this, "your Date is saved", Toast.LENGTH_LONG).show();
                                 else
-                                    Toast.makeText(DetailActivity.this,"your Date did not update pleased try again",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(DetailActivity.this, "your Date did not saved pleased try again", Toast.LENGTH_LONG).show();
+                            } else {
+                                boolean re = db.updateContact(n.getId(), editText_title.getText().toString(), editText_content.getText().toString(), Utility.getCurrentlyDate());
+                                if (re)
+                                    Toast.makeText(DetailActivity.this, "your Date is update", Toast.LENGTH_LONG).show();
+                                else
+                                    Toast.makeText(DetailActivity.this, "your Date did not update pleased try again", Toast.LENGTH_LONG).show();
 
                             }
-                            i =new Intent(DetailActivity.this,MainActivity.class);
+                            i = new Intent(DetailActivity.this, MainActivity.class);
                             startActivity(i);
                             return true;
                         case R.id.consoleDoc:
-                             i =new Intent(DetailActivity.this,MainActivity.class);
+                            i = new Intent(DetailActivity.this, MainActivity.class);
                             startActivity(i);
                             return true;
                     }
@@ -105,6 +109,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 }
 
+
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
 
@@ -112,4 +117,9 @@ public class DetailActivity extends AppCompatActivity {
 
             };
 
+    @Override
+    public void onBackPressed() {
+        Intent  i = new Intent(DetailActivity.this, MainActivity.class);
+        startActivity(i);
+    }
 }
