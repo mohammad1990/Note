@@ -1,31 +1,50 @@
 package com.android.tofi.mohammad.mohammadtofinote.com.note.adapter;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.tofi.mohammad.mohammadtofinote.DetailActivity;
+import com.android.tofi.mohammad.mohammadtofinote.MainActivity;
 import com.android.tofi.mohammad.mohammadtofinote.R;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemOnClick;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemTouchHelperAdapter;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemTouchHelperViewHolder;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.OnStartDragListener;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.ItemTouch.RecyclerListFragment;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.com.note.utitlity.Utility;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.database.NoteDBHelper;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.entity.Note;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by hamzaK on 9.5.2016.
  */
-public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> {
-    List<Note> notes;
+public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> implements ItemTouchHelperAdapter, ItemOnClick {
+    List<Note> notes = new ArrayList<>();
+    NoteDBHelper db;
+    private final OnStartDragListener mDragStartListener;
+    private ItemOnClick mItemOnClick;
 
-    private OnItemTouchListener onItemTouchListener;
-
-    public AdapterBox(List<Note> notes,OnItemTouchListener onItemTouchListener) {
-        this.notes = notes;
-        this.onItemTouchListener = onItemTouchListener;
+    public AdapterBox(Context context, OnStartDragListener dragStartListener, ItemOnClick ItemOnClick) {
+        mDragStartListener = dragStartListener;
+        mItemOnClick = ItemOnClick;
+        db = new NoteDBHelper(context);
+        this.notes = db.getAllNote();
     }
+
 
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -35,10 +54,21 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(NoteViewHolder holder, int i) {
+    public void onBindViewHolder(final NoteViewHolder holder, final int i) {
         holder.noteTitle.setText(notes.get(i).getTitle());
         holder.noteDate.setText(Utility.convertDToS(notes.get(i).getDate()));
         holder.noteContain.setText(notes.get(i).getNoteContain());
+        holder.cv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mItemOnClick.onClickItem(notes.get(i));
+//                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+//                    //  mDragStartListener.onStartDrag(holder);
+//                }
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -46,12 +76,28 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         return notes.size();
     }
 
+
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(notes, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
     }
-// implements View.OnClickListener
-    public  class NoteViewHolder extends RecyclerView.ViewHolder {
+
+    @Override
+    public void onItemDismiss(int position) {
+        db.deleteContact(notes.get(position).getId());
+        notes.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onClickItem(Note note) {
+
+    }
+
+    // implements View.OnClickListener
+    public class NoteViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
         CardView cv;
         TextView noteTitle;
         TextView noteDate;
@@ -63,43 +109,20 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
             noteTitle = (TextView) itemView.findViewById(R.id.note_title);
             noteContain = (TextView) itemView.findViewById(R.id.note_contain);
             noteDate = (TextView) itemView.findViewById(R.id.note_date);
-            /*itemView.setOnClickListener(this);*/
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemTouchListener.onCardViewTap(v, getLayoutPosition());
-                }
-            });
         }
 
 
-    }
- /*   public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
-    }*/
- /*   public interface MyClickListener {
-        public void onItemClick(int position, View v);
-    }*/
- /*   public void addItem(DataObject dataObj, int index) {
-      //  mDataset.add(index, dataObj);
-        notifyItemInserted(index);
-    }*/
+        @Override
+        public void onItemSelected() {
+            // itemView.setBackgroundColor(Color.LTGRAY);
+        }
 
-    public void deleteItem(int index) {
-        notes.remove(index);
-        notifyItemRemoved(index);
+        @Override
+        public void onItemClear() {
+            //itemView.setBackgroundColor(0);
+        }
     }
-    //new
-    public interface OnItemTouchListener {
-        /**
-         * Callback invoked when the user Taps one of the RecyclerView items
-         *
-         * @param view     the CardView touched
-         * @param position the index of the item touched in the RecyclerView
-         */
-        void onCardViewTap(View view, int position);
 
-    }
 }
 
 
