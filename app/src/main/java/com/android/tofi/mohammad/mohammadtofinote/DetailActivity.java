@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,22 +34,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.detail_layout);
         editText_title = (EditText) findViewById(R.id.title_content);
         editText_content = (EditText) findViewById(R.id.content_content);
-
-        editText_content.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mActionMode = startSupportActionMode(mActioModeCallBack);
-            }
-        });
-
+        getSupportActionBar().hide();
+        mActionMode = startSupportActionMode(mActioModeCallBack);
         textView_date = (TextView) findViewById(R.id.date_content);
         Intent i = getIntent();
         n = i.getParcelableExtra("note");
@@ -56,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
             editText_title.setText(n.getTitle());
             editText_content.setText(n.getNoteContain());
             textView_date.setText(Utility.convertDToS(n.getDate()));
-            //textView_date.setText(n.getId()+"");
+
         }
     }
 
@@ -66,6 +53,7 @@ public class DetailActivity extends AppCompatActivity {
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 
                     getMenuInflater().inflate(R.menu.contextmenu, menu);
+
 
                     return true;
                 }
@@ -119,7 +107,16 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent  i = new Intent(DetailActivity.this, MainActivity.class);
+        Intent i = new Intent(DetailActivity.this, MainActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
