@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, DetailActivity.class);
                 i.putExtra("default", -1);
                 startActivity(i);
+                finish();
                 break;
 
             case R.id.about_us:

@@ -24,9 +24,10 @@ import com.android.tofi.mohammad.mohammadtofinote.com.note.database.NoteDBHelper
 import com.android.tofi.mohammad.mohammadtofinote.com.note.entity.Note;
 
 
-public class RecyclerListFragment extends Fragment implements OnStartDragListener ,ItemOnClick {
+public class RecyclerListFragment extends Fragment implements OnStartDragListener, ItemOnClick {
     private ItemTouchHelper mItemTouchHelper;
     RecyclerView recyclerView;
+    AdapterBox adapter;
 
     @Nullable
     @Override
@@ -38,9 +39,17 @@ public class RecyclerListFragment extends Fragment implements OnStartDragListene
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-         recyclerView = (RecyclerView) view;
+        recyclerView = (RecyclerView) view;
+        adapter = new AdapterBox(getActivity(), this, this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
 
     }
+
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
@@ -49,13 +58,8 @@ public class RecyclerListFragment extends Fragment implements OnStartDragListene
     @Override
     public void onResume() {
         super.onResume();
-        AdapterBox adapter = new AdapterBox(getActivity(), this,this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        adapter.setMyList();
+        // adapter.notifyDataSetChanged();
     }
 
 

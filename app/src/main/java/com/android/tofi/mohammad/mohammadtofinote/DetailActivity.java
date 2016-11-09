@@ -36,6 +36,7 @@ public class DetailActivity extends AppCompatActivity {
         editText_content = (EditText) findViewById(R.id.content_content);
         getSupportActionBar().hide();
         mActionMode = startSupportActionMode(mActioModeCallBack);
+
         textView_date = (TextView) findViewById(R.id.date_content);
         Intent i = getIntent();
         n = i.getParcelableExtra("note");
@@ -84,10 +85,12 @@ public class DetailActivity extends AppCompatActivity {
                             }
                             i = new Intent(DetailActivity.this, MainActivity.class);
                             startActivity(i);
+                            finish();
                             return true;
                         case R.id.consoleDoc:
                             i = new Intent(DetailActivity.this, MainActivity.class);
                             startActivity(i);
+                            finish();
                             return true;
                     }
                     mActionMode.finish();
@@ -105,18 +108,18 @@ public class DetailActivity extends AppCompatActivity {
 
             };
 
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(DetailActivity.this, MainActivity.class);
-        startActivity(i);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        /*Intent i = new Intent(DetailActivity.this, MainActivity.class);
+//        startActivity(i);*/
+//    }
 
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             onBackPressed();
 
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 }

@@ -89,6 +89,11 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
+    public void setMyList() {
+        notes.clear();
+        notes = db.getAllNote(); // reload the items from database
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onItemDismiss(int position) {
