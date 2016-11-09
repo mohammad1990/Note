@@ -42,7 +42,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         }
         // Notify the adapter of the move
         mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        return true;
+        return false;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     should return true from isLongPressDragEnabled() in order to support starting drag events from a long press on a RecyclerView item.*/
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        return false;
     }
 
     @Override

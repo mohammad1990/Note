@@ -32,14 +32,14 @@ import java.util.List;
 /**
  * Created by hamzaK on 9.5.2016.
  */
-public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> implements ItemTouchHelperAdapter, ItemOnClick {
+public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> implements ItemTouchHelperAdapter {
     List<Note> notes = new ArrayList<>();
     NoteDBHelper db;
-    private final OnStartDragListener mDragStartListener;
+    //private final OnStartDragListener mDragStartListener;
     private ItemOnClick mItemOnClick;
 
     public AdapterBox(Context context, OnStartDragListener dragStartListener, ItemOnClick ItemOnClick) {
-        mDragStartListener = dragStartListener;
+        //     mDragStartListener = dragStartListener;
         mItemOnClick = ItemOnClick;
         db = new NoteDBHelper(context);
         this.notes = db.getAllNote();
@@ -58,16 +58,22 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         holder.noteTitle.setText(notes.get(i).getTitle());
         holder.noteDate.setText(Utility.convertDToS(notes.get(i).getDate()));
         holder.noteContain.setText(notes.get(i).getNoteContain());
-        holder.cv.setOnTouchListener(new View.OnTouchListener() {
+        holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 mItemOnClick.onClickItem(notes.get(i));
-//                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-//                    //  mDragStartListener.onStartDrag(holder);
-//                }
-                return false;
             }
         });
+        //// TODO: 11/8/2016
+        /*holder.cv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    mDragStartListener.onStartDrag(holder);
+                }
+                return false;
+            }
+        });*/
 
     }
 
@@ -83,18 +89,21 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
+    public void setMyList() {
+        notes.clear();
+        notes = db.getAllNote(); // reload the items from database
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onItemDismiss(int position) {
         db.deleteContact(notes.get(position).getId());
         notes.remove(position);
         notifyItemRemoved(position);
-    }
-
-    @Override
-    public void onClickItem(Note note) {
+        notifyItemRangeChanged(position, getItemCount());
 
     }
+
 
     // implements View.OnClickListener
     public class NoteViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
