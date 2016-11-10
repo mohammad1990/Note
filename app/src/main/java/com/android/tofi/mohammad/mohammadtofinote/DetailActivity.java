@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -35,6 +36,7 @@ public class DetailActivity extends AppCompatActivity {
         editText_title = (EditText) findViewById(R.id.title_content);
         editText_content = (EditText) findViewById(R.id.content_content);
         getSupportActionBar().hide();
+
         mActionMode = startSupportActionMode(mActioModeCallBack);
 
         textView_date = (TextView) findViewById(R.id.date_content);
@@ -44,7 +46,6 @@ public class DetailActivity extends AppCompatActivity {
             editText_title.setText(n.getTitle());
             editText_content.setText(n.getNoteContain());
             textView_date.setText(Utility.convertDToS(n.getDate()));
-
         }
     }
 
@@ -52,12 +53,13 @@ public class DetailActivity extends AppCompatActivity {
             new ActionMode.Callback() {
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-
-                    getMenuInflater().inflate(R.menu.contextmenu, menu);
+                    MenuInflater inflater = mode.getMenuInflater();
+                    inflater.inflate(R.menu.contextmenu, menu);
 
 
                     return true;
                 }
+
 
                 @Override
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -92,21 +94,20 @@ public class DetailActivity extends AppCompatActivity {
                             startActivity(i);
                             finish();
                             return true;
+                        default:
+                            return false;
                     }
-                    mActionMode.finish();
-
-                    return true;
-
 
                 }
 
 
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
-
+                    mActionMode = null;
                 }
 
             };
+
 
 //    @Override
 //    public void onBackPressed() {
