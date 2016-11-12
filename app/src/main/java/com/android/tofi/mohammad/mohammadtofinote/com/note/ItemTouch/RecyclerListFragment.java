@@ -4,7 +4,6 @@ package com.android.tofi.mohammad.mohammadtofinote.com.note.ItemTouch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +14,11 @@ import android.view.ViewGroup;
 
 import com.android.tofi.mohammad.mohammadtofinote.DetailActivity;
 
-import com.android.tofi.mohammad.mohammadtofinote.R;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemOnClick;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.OnStartDragListener;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.SimpleItemTouchHelperCallback;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.adapter.AdapterBox;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.database.NoteDBHelper;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.entity.Note;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter.AdapterBox;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 
 
 public class RecyclerListFragment extends Fragment implements OnStartDragListener, ItemOnClick {

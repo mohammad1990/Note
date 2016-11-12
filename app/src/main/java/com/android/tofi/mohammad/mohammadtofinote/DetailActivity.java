@@ -1,33 +1,27 @@
 package com.android.tofi.mohammad.mohammadtofinote;
 
+import android.content.ContentValues;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.tofi.mohammad.mohammadtofinote.com.note.com.note.utitlity.Utility;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.database.NoteDBHelper;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.entity.Note;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Utitlity.Utility;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteDBHelper;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 
 public class DetailActivity extends AppCompatActivity {
     EditText editText_title;
     EditText editText_content;
     TextView textView_date;
     private ActionMode mActionMode;
-    NoteDBHelper db = new NoteDBHelper(DetailActivity.this);
-    Note n;
+    Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +35,11 @@ public class DetailActivity extends AppCompatActivity {
 
         textView_date = (TextView) findViewById(R.id.date_content);
         Intent i = getIntent();
-        n = i.getParcelableExtra("note");
-        if (n != null) {
-            editText_title.setText(n.getTitle());
-            editText_content.setText(n.getNoteContain());
-            textView_date.setText(Utility.convertDToS(n.getDate()));
+        note = i.getParcelableExtra("note");
+        if (note != null) {
+            editText_title.setText(note.getTitle());
+            editText_content.setText(note.getNoteContain());
+            textView_date.setText(Utility.convertDToS(note.getDate()));
         }
     }
 
@@ -71,9 +65,14 @@ public class DetailActivity extends AppCompatActivity {
                     Intent i;
                     switch (item.getItemId()) {
                         case R.id.saveDoc:
-                            if (n == null) {
-                                boolean re = db.insertContact(editText_title.getText().toString(), editText_content.getText().toString(), Utility.getCurrentlyDate());
-                                if (re)
+                            if (note == null) {
+                                Utility.storeNote(DetailActivity.this, new Note(editText_title.getText().toString(), editText_content.getText().toString(), Utility.convertSTodD(Utility.getCurrentlyDate())));
+                            } else {
+                                Utility.updateNote(DetailActivity.this, note);
+
+                            }
+                            //boolean re = db.insertContact(editText_title.getText().toString(), editText_content.getText().toString(), Utility.getCurrentlyDate());
+                                /*if (re)
                                     Toast.makeText(DetailActivity.this, "your Date is saved", Toast.LENGTH_LONG).show();
                                 else
                                     Toast.makeText(DetailActivity.this, "your Date did not saved pleased try again", Toast.LENGTH_LONG).show();
@@ -83,8 +82,8 @@ public class DetailActivity extends AppCompatActivity {
                                     Toast.makeText(DetailActivity.this, "your Date is update", Toast.LENGTH_LONG).show();
                                 else
                                     Toast.makeText(DetailActivity.this, "your Date did not update pleased try again", Toast.LENGTH_LONG).show();
+*/
 
-                            }
                             i = new Intent(DetailActivity.this, MainActivity.class);
                             startActivity(i);
                             finish();

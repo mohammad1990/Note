@@ -1,8 +1,6 @@
 package com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList;
 
-import android.support.v7.widget.RecyclerView;
-
-import com.android.tofi.mohammad.mohammadtofinote.com.note.entity.Note;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 
 /**
  * Created by aliT on 11/6/2016.
