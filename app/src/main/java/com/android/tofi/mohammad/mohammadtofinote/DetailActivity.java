@@ -35,7 +35,9 @@ public class DetailActivity extends AppCompatActivity {
 
         textView_date = (TextView) findViewById(R.id.date_content);
         Intent i = getIntent();
+        note=null;
         note = i.getParcelableExtra("note");
+
         if (note != null) {
             editText_title.setText(note.getTitle());
             editText_content.setText(note.getNoteContain());
@@ -68,7 +70,7 @@ public class DetailActivity extends AppCompatActivity {
                             if (note == null) {
                                 Utility.storeNote(DetailActivity.this, new Note(editText_title.getText().toString(), editText_content.getText().toString(), Utility.convertSTodD(Utility.getCurrentlyDate())));
                             } else {
-                                Utility.updateNote(DetailActivity.this, note);
+                                Utility.updateNote(DetailActivity.this, new Note(note.getId(),editText_title.getText().toString(), editText_content.getText().toString(), Utility.convertSTodD(Utility.getCurrentlyDate())));
 
                             }
                             //boolean re = db.insertContact(editText_title.getText().toString(), editText_content.getText().toString(), Utility.getCurrentlyDate());

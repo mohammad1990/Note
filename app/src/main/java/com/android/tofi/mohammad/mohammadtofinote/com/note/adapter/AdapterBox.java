@@ -89,6 +89,7 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
     @Override
     public void onItemDismiss(int position) {
         //db.deleteContact(notes.get(position).getId());
+        Utility.deleteNote(mContext,notes.get(position));
         notes.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());

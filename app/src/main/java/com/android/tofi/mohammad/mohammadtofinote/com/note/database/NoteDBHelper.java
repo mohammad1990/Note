@@ -33,7 +33,8 @@ public class NoteDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_QUERY = "create table "
-                + NoteContract.NoteEntry.TABLE_NAME + " (" + NoteContract.NoteEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + NoteContract.NoteEntry.TABLE_NAME + " ("
+                + NoteContract.NoteEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + NoteContract.NoteEntry.COLUMN_TITLE + " text,"
                 + NoteContract.NoteEntry.COLUMN_CONTAIN + " text,"
                 + NoteContract.NoteEntry.COLUMN_DATE + " date not null)";

@@ -40,6 +40,16 @@ public class Utility {
                 coValues, NoteContract.NoteEntry.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(note.getId())});
     }
+    public static void deleteNote(Context context, Note note) {
+        /*ContentValues coValues = new ContentValues();
+        String noteTitle = note.getTitle();
+        String noteDescription = note.getNoteContain();
+        Date noteDate = note.getDate();
+        coValues.put(NoteContract.NoteEntry.COLUMN_TITLE, noteTitle);
+        coValues.put(NoteContract.NoteEntry.COLUMN_CONTAIN, noteDescription);
+        coValues.put(NoteContract.NoteEntry.COLUMN_DATE, convertDToS(noteDate));*/
+        context.getContentResolver().delete(NoteContract.NoteEntry.CONTENT_URI, NoteContract.NoteEntry.COLUMN_ID + " = ?",new String[]{String.valueOf(note.getId())});
+    }
 
     public static List<Note> getNotes(Context context) {
         List<Note> notes = new ArrayList<>();
@@ -47,11 +57,13 @@ public class Utility {
             Cursor c = context.getContentResolver().query(NoteContract.NoteEntry.CONTENT_URI,
                     null,
                     null, null,
-                    NoteContract.NoteEntry.COLUMN_DATE);
+                    null);
+
             if(c!=null) {
                 if (c.moveToFirst()) {
                     do {
-                        notes.add(new Note(c.getColumnIndex(NoteContract.NoteEntry.COLUMN_ID), c.getString(c.getColumnIndex(NoteContract.NoteEntry.COLUMN_TITLE)),
+                        int x=c.getInt(c.getColumnIndex(NoteContract.NoteEntry.COLUMN_ID));
+                        notes.add(new Note(c.getInt(c.getColumnIndex(NoteContract.NoteEntry.COLUMN_ID)),c.getString(c.getColumnIndex(NoteContract.NoteEntry.COLUMN_TITLE)),
                                 c.getString(c.getColumnIndex(NoteContract.NoteEntry.COLUMN_CONTAIN)), convertSTodD(c.getString(c.getColumnIndex(NoteContract.NoteEntry.COLUMN_DATE)))));
                     } while (c.moveToNext());
                 }
