@@ -1,15 +1,12 @@
-package com.android.tofi.mohammad.mohammadtofinote.com.note.entity;
+package com.android.tofi.mohammad.mohammadtofinote.com.note.Entity;
 
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.android.tofi.mohammad.mohammadtofinote.R;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.com.note.utitlity.Utility;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Utitlity.Utility;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by hamzaK on 7.5.2016.
@@ -26,6 +23,12 @@ public class Note implements Parcelable {
         this.date = date;
         this.noteContain = noteContain;
     }
+    public Note(String title, String noteContain, Date date) {
+        this.title = title;
+        this.date = date;
+        this.noteContain = noteContain;
+    }
+
 
     public Note() {
     }

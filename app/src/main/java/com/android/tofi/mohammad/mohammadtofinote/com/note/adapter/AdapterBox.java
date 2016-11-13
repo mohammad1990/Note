@@ -1,29 +1,21 @@
-package com.android.tofi.mohammad.mohammadtofinote.com.note.adapter;
+package com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.tofi.mohammad.mohammadtofinote.DetailActivity;
-import com.android.tofi.mohammad.mohammadtofinote.MainActivity;
 import com.android.tofi.mohammad.mohammadtofinote.R;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemOnClick;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemTouchHelperAdapter;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemTouchHelperViewHolder;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.OnStartDragListener;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.ItemTouch.RecyclerListFragment;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.com.note.utitlity.Utility;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.database.NoteDBHelper;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.entity.Note;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Utitlity.Utility;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteDBHelper;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,15 +26,13 @@ import java.util.List;
  */
 public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> implements ItemTouchHelperAdapter {
     List<Note> notes = new ArrayList<>();
-    NoteDBHelper db;
-    //private final OnStartDragListener mDragStartListener;
     private ItemOnClick mItemOnClick;
+    Context mContext;
 
     public AdapterBox(Context context, OnStartDragListener dragStartListener, ItemOnClick ItemOnClick) {
-        //     mDragStartListener = dragStartListener;
         mItemOnClick = ItemOnClick;
-        db = new NoteDBHelper(context);
-        this.notes = db.getAllNote();
+        mContext = context;
+        this.notes = Utility.getNotes(context);
     }
 
 
@@ -89,15 +79,17 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
+
     public void setMyList() {
         notes.clear();
-        notes = db.getAllNote(); // reload the items from database
+        notes = Utility.getNotes(mContext); // reload the items from database
         notifyDataSetChanged();
     }
 
     @Override
     public void onItemDismiss(int position) {
-        db.deleteContact(notes.get(position).getId());
+        //db.deleteContact(notes.get(position).getId());
+        Utility.deleteNote(mContext,notes.get(position));
         notes.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
