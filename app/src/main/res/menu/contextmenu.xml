@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Save" android:id="@+id/saveDoc"/>
-    <item android:title="console" android:id="@+id/consoleDoc"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/saveDoc"
+        android:title="Save" />
+    <item
+        android:id="@+id/consoleDoc"
+        android:title="console" />
+    <item
+        android:id="@+id/share_note"
+        android:title="Share"
+        app:showAsAction="always" />
 
 </menu>

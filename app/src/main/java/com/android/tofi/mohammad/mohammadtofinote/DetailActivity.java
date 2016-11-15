@@ -95,6 +95,15 @@ public class DetailActivity extends AppCompatActivity {
                             startActivity(i);
                             finish();
                             return true;
+                        case R.id.share_note:
+                            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                            sharingIntent.setType("text/plain");
+                            String shareBody = note.getNoteContain();
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, note.getTitle());
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                            startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                            return true;
+
                         default:
                             return false;
                     }
