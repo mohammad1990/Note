@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.new_note:
-                Intent i = new Intent(MainActivity.this, DetailActivity.class);
-                i.putExtra("default", -1);
-                startActivity(i);
-                finish();
-                break;
+//            case R.id.new_note:
+//                Intent i = new Intent(MainActivity.this, DetailActivity.class);
+//                i.putExtra("default", -1);
+//                startActivity(i);
+//                finish();
+//                break;
 
             case R.id.about_us:
                 Log.i("DEV", "MENU ABOUT CLICKED");
