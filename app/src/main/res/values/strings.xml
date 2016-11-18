@@ -3,4 +3,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="spinner_item_array">
+        <item>Alpha</item>
+        <item>Date</item>
+    </string-array>
 </resources>

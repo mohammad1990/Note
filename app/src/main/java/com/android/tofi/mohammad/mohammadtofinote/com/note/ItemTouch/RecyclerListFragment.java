@@ -2,6 +2,7 @@ package com.android.tofi.mohammad.mohammadtofinote.com.note.ItemTouch;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.tofi.mohammad.mohammadtofinote.DetailActivity;
 
@@ -21,10 +23,14 @@ import com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter.AdapterBox;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 
 
-public class RecyclerListFragment extends Fragment implements OnStartDragListener, ItemOnClick {
+import static android.content.Context.MODE_PRIVATE;
+
+
+public class RecyclerListFragment extends Fragment implements  ItemOnClick {
     private ItemTouchHelper mItemTouchHelper;
     RecyclerView recyclerView;
     AdapterBox adapter;
+    String sort = "title";
 
     @Nullable
     @Override
@@ -37,20 +43,28 @@ public class RecyclerListFragment extends Fragment implements OnStartDragListene
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) view;
-        adapter = new AdapterBox(getActivity(), this, this);
+        adapter = new AdapterBox(getActivity(), this, sort);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+       /* recyclerView.setItemAnimator(animator);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());*/
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
     }
 
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
-    }
+//    public void refreshAdapter() {
+//        adapter = new AdapterBox(getActivity(), this, sort);
+//        adapter.notifyDataSetChanged();
+//
+//    }
+
+//    @Override
+//    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+//        mItemTouchHelper.startDrag(viewHolder);
+//    }
 
     @Override
     public void onResume() {

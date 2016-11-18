@@ -1,12 +1,16 @@
 package com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.tofi.mohammad.mohammadtofinote.R;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemOnClick;
@@ -21,20 +25,92 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by hamzaK on 9.5.2016.
  */
 public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> implements ItemTouchHelperAdapter {
-    List<Note> notes = new ArrayList<>();
+    //List<Note> notes = new ArrayList<>();
     private ItemOnClick mItemOnClick;
+    private SortedList<Note> mNote;
     Context mContext;
 
-    public AdapterBox(Context context, OnStartDragListener dragStartListener, ItemOnClick ItemOnClick) {
+
+    public AdapterBox(Context context, ItemOnClick ItemOnClick, String sort) {
+
+        SharedPreferences prefs = context.getSharedPreferences("sortPre", MODE_PRIVATE);
+        String restoredText = prefs.getString("sortValue", null);
+        if (restoredText != null) {
+            SortedList(restoredText);
+        }
         mItemOnClick = ItemOnClick;
         mContext = context;
-        this.notes = Utility.getNotes(context);
+        if (Utility.getNotes(context) != null)
+            mNote.addAll(Utility.getNotes(context));
+
     }
 
+    private void SortedList(final String finalSort) {
+        mNote = new SortedList<Note>(Note.class, new SortedList.Callback<Note>() {
+
+            @Override
+            public void onInserted(int position, int count) {
+                notifyItemRangeInserted(position, count);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                notifyItemRangeRemoved(position, count);
+
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                notifyItemMoved(fromPosition, toPosition);
+
+            }
+
+            @Override
+            public int compare(Note o1, Note o2) {
+                switch (finalSort) {
+                    case "alpha": {
+                        return o1.getTitle().compareTo(o2.getTitle());
+                    }
+                    case "date": {
+                        return o1.getDate().compareTo(o2.getDate());
+                    }
+                    default:
+                        return o1.getTitle().compareTo(o2.getTitle());
+                }
+            }
+
+            @Override
+            public void onChanged(int position, int count) {
+                notifyItemRangeChanged(position, count);
+
+            }
+
+            @Override
+            public boolean areContentsTheSame(Note oldItem, Note newItem) {
+                switch (finalSort) {
+                    case "alpha": {
+                        return oldItem.getTitle().equals(newItem.getTitle());
+                    }
+                    case "date": {
+                        return oldItem.getDate().equals(newItem.getDate());
+                    }
+                    default:
+                        return oldItem.getTitle().equals(newItem.getTitle());
+                }
+            }
+
+            @Override
+            public boolean areItemsTheSame(Note item1, Note item2) {
+                return item1.getId() == item2.getId();
+            }
+        });
+    }
 
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,13 +121,14 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
 
     @Override
     public void onBindViewHolder(final NoteViewHolder holder, final int i) {
-        holder.noteTitle.setText(notes.get(i).getTitle());
-        holder.noteDate.setText(Utility.convertDToS(notes.get(i).getDate()));
-        holder.noteContain.setText(notes.get(i).getNoteContain());
+        Note note = mNote.get(i);
+        holder.noteTitle.setText(note.getTitle());
+        holder.noteDate.setText(Utility.convertDToS(note.getDate()));
+        holder.noteContain.setText(note.getNoteContain());
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mItemOnClick.onClickItem(notes.get(i));
+                mItemOnClick.onClickItem(mNote.get(i));
             }
         });
         //// TODO: 11/8/2016
@@ -69,31 +146,25 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
 
     @Override
     public int getItemCount() {
-        return notes.size();
+        return mNote.size();
     }
 
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(notes, fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
+        //  Collections.swap(mNote, fromPosition, toPosition);
+        //notifyItemMoved(fromPosition, toPosition);
         return true;
     }
 
     public void setMyList() {
-        notes.clear();
-        notes = Utility.getNotes(mContext); // reload the items from database
-        notifyDataSetChanged();
+        mNote.addAll(Utility.getNotes(mContext)); // reload the items from database
     }
 
     @Override
     public void onItemDismiss(int position) {
-        //db.deleteContact(notes.get(position).getId());
-        Utility.deleteNote(mContext,notes.get(position));
-        notes.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, getItemCount());
-
+        Utility.deleteNote(mContext, mNote.get(position));
+        mNote.removeItemAt(position);
     }
 
 

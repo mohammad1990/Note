@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <item android:id="@+id/about_us" android:title="About"/>
+    <item
+        android:id="@+id/sort_item"
+        android:icon="@drawable/ic_add_black"
+        android:title="Sort"
+        android:visible="true"
+        android:titleCondensed="sss"
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always" />
 
 </menu>
