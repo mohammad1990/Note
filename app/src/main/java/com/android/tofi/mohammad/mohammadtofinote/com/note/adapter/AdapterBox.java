@@ -1,14 +1,19 @@
 package com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter;
 
+import android.app.Activity;
+import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +27,11 @@ import com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteDBHelper
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static android.R.attr.filter;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -33,11 +40,11 @@ import static android.content.Context.MODE_PRIVATE;
 public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> implements ItemTouchHelperAdapter {
     //List<Note> notes = new ArrayList<>();
     private ItemOnClick mItemOnClick;
-    private SortedList<Note> mNote;
+    public SortedList<Note> mNote;
+    //public ArrayList<Note>  filterList = new ArrayList<>();
     Context mContext;
 
-
-    public AdapterBox(Context context, ItemOnClick ItemOnClick, String sort) {
+    public AdapterBox(Context context, ItemOnClick ItemOnClick) {
 
         SharedPreferences prefs = context.getSharedPreferences("sortPre", MODE_PRIVATE);
         String restoredText = prefs.getString("sortValue", null);
@@ -46,9 +53,17 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         }
         mItemOnClick = ItemOnClick;
         mContext = context;
-        if (Utility.getNotes(context) != null)
+        if (Utility.getNotes(context) != null) {
             mNote.addAll(Utility.getNotes(context));
+            // this.filterList.addAll(Utility.getNotes(context));
+        }
 
+    }
+
+    public void filter(List<Note> mNote) {
+        this.mNote.clear();
+        this.mNote.addAll(mNote);
+        notifyDataSetChanged();
     }
 
     private void SortedList(final String finalSort) {
@@ -74,14 +89,14 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
             @Override
             public int compare(Note o1, Note o2) {
                 switch (finalSort) {
-                    case "alpha": {
+                    case "Alpha": {
                         return o1.getTitle().compareTo(o2.getTitle());
                     }
-                    case "date": {
+                    case "Date": {
                         return o1.getDate().compareTo(o2.getDate());
                     }
                     default:
-                        return o1.getTitle().compareTo(o2.getTitle());
+                        return -1;
                 }
             }
 
@@ -94,14 +109,14 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
             @Override
             public boolean areContentsTheSame(Note oldItem, Note newItem) {
                 switch (finalSort) {
-                    case "alpha": {
+                    case "Alpha": {
                         return oldItem.getTitle().equals(newItem.getTitle());
                     }
-                    case "date": {
+                    case "Date": {
                         return oldItem.getDate().equals(newItem.getDate());
                     }
                     default:
-                        return oldItem.getTitle().equals(newItem.getTitle());
+                        return false;
                 }
             }
 
@@ -167,7 +182,6 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         mNote.removeItemAt(position);
     }
 
-
     // implements View.OnClickListener
     public class NoteViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
         CardView cv;
@@ -194,6 +208,7 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
             //itemView.setBackgroundColor(0);
         }
     }
+
 
 }
 

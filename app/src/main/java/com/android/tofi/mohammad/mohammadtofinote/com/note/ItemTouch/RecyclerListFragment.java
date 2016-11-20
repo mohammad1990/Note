@@ -21,16 +21,23 @@ import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerLi
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.SimpleItemTouchHelperCallback;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter.AdapterBox;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Utitlity.Utility;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class RecyclerListFragment extends Fragment implements  ItemOnClick {
+public class RecyclerListFragment extends Fragment implements ItemOnClick {
     private ItemTouchHelper mItemTouchHelper;
     RecyclerView recyclerView;
     AdapterBox adapter;
-    String sort = "title";
 
     @Nullable
     @Override
@@ -43,7 +50,7 @@ public class RecyclerListFragment extends Fragment implements  ItemOnClick {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) view;
-        adapter = new AdapterBox(getActivity(), this, sort);
+        adapter = new AdapterBox(getActivity(), this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -61,18 +68,40 @@ public class RecyclerListFragment extends Fragment implements  ItemOnClick {
 //
 //    }
 
-//    @Override
+    //    @Override
 //    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
 //        mItemTouchHelper.startDrag(viewHolder);
 //    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(String query) {
+        query = query.toString().toLowerCase();
+        List<Note> filteredList = new ArrayList<>();
+        List<Note> notes = Utility.getNotes(getActivity());
+        for (int i = 0; i < notes.size(); i++) {
+            String text = notes.get(i).getTitle().toLowerCase();
+            if (text.contains(query)) {
+                filteredList.add(notes.get(i));
+            }
+        }
+        adapter.filter(filteredList);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         adapter.setMyList();
         // adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+
+    }
 
     @Override
     public void onClickItem(Note note) {

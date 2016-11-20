@@ -1,6 +1,7 @@
 package com.android.tofi.mohammad.mohammadtofinote;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,17 +23,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter.AdapterBox;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.ItemTouch.RecyclerListFragment;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
     Spinner spinnerCustom;
+    EditText search;
     Toolbar toolbar;
     SharedPreferences sharedpreferences;
 
@@ -65,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private void initCustomSpinner(Menu menu) {
         final MenuItem item = menu.findItem(R.id.sort_item);
         spinnerCustom = (Spinner) MenuItemCompat.getActionView(item);
+
         ArrayAdapter<String> customSpinnerAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.spinner_item, getResources().getStringArray(R.array.spinner_item_array));
         customSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Resources res = getResources();
@@ -97,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mainmenu, menu);
         initCustomSpinner(menu);
+        setupSearchView(menu);
         return true;
     }
 
@@ -118,10 +126,30 @@ public class MainActivity extends AppCompatActivity {
         return true;
 
     }
-
+    private void setupSearchView(Menu menu) {
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+       /* search.setIconifiedByDefault(false);
+        search.setOnQueryTextListener(this);
+        search.setSubmitButtonEnabled(true);
+        search.setQueryHint("Search Here");*/
+    }
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        EventBus.getDefault().post(newText);
+
+        return true;
     }
 //// TODO: 11/8/2016
 //    public void open(final int position) {
