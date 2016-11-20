@@ -16,7 +16,8 @@
 
         <include
             android:id="@+id/tool_bar"
-            layout="@layout/tool_bar"></include>
+            layout="@layout/tool_bar">
+        </include>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
