@@ -1,22 +1,8 @@
 package com.android.tofi.mohammad.mohammadtofinote.com.note.Database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.android.tofi.mohammad.mohammadtofinote.com.note.Utitlity.Utility;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
-
-import java.util.ArrayList;
-
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.COLUMN_CONTAIN;
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.COLUMN_DATE;
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.COLUMN_ID;
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.COLUMN_TITLE;
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.TABLE_NAME;
 
 /**
  * Created by hamzaK on 7.5.2016.

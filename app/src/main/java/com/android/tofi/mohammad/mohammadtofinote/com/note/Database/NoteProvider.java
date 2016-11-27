@@ -8,13 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
-
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.COLUMN_CONTAIN;
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.COLUMN_DATE;
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.COLUMN_TITLE;
-import static com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteContract.NoteEntry.TABLE_NAME;
-
 /**
  * Created by aliT on 11/12/2016.
  */
