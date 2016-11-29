@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,8 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     EditText editText_title;
     EditText editText_content;
     Note note;
-    // View root;
-    private int currentBackgroundColor = 0xffffffff;
+    TextView toolbarTextView;
     private int mPickedColor = Color.WHITE;
     LinearLayout rl;
 
@@ -44,18 +44,29 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         rl = (LinearLayout) findViewById(R.id.rl);
-        TextView toolbarTextView = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTextView = (TextView) findViewById(R.id.toolbar_title);
         toolbarTextView.setVisibility(View.VISIBLE);
-
+        toolbarTextView.setBackgroundResource(R.color.white);
+        toolbarTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                colorNoteDialog();
+            }
+        });
         editText_title = (EditText) findViewById(R.id.title_content);
         editText_content = (EditText) findViewById(R.id.content_content);
         Intent i = getIntent();
         note = new Note();
         note = i.getParcelableExtra("note");
-
         if (note != null) {
+            toolbarTextView.setBackgroundColor(note.getNoteColor());
+            rl.setBackgroundColor(note.getNoteColor());
             editText_title.setText(note.getTitle());
             editText_content.setText(note.getNoteContain());
+        }
+        else
+        {
+            toolbarTextView.setBackgroundResource(R.color.white);
         }
     }
 
@@ -85,10 +96,6 @@ public class DetailActivity extends AppCompatActivity {
         // Set the color picker dialog size
         dialog.getWindow().setGravity(Gravity.CENTER);
 
-//        dialog.getWindow().setLayout(
-//                getScreenSize().x - rl.getPaddingLeft() - rl.getPaddingRight(),
-//                getScreenSize().y - getStatusBarHeight() - rl.getPaddingTop() - rl.getPaddingBottom());
-
         // Set an item click listener for GridView widget
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,7 +105,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 // Set the layout background color as picked color
                 rl.setBackgroundColor(mPickedColor);
-
+                toolbarTextView.setBackgroundColor(mPickedColor);
                 // close the color picker
                 dialog.dismiss();
             }
@@ -106,43 +113,32 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    // Custom method to get status bar height in pixels
-    public int getStatusBarHeight() {
-        int height = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            height = getResources().getDimensionPixelSize(resourceId);
-        }
-        return height;
-    }
-
-    private void toast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
+private int getTextViewColor()
+{
+    ColorDrawable cd = (ColorDrawable) toolbarTextView.getBackground();
+    int colorCode = cd.getColor();
+    return colorCode;
+}
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
             case R.id.saveDoc:
                 if (note == null) {
-                    Utility.storeNote(DetailActivity.this, new Note(editText_title.getText().toString(), editText_content.getText().toString(), Utility.convertSTodD(Utility.getCurrentlyDate())));
+                    Utility.storeNote(DetailActivity.this, new Note(editText_title.getText().toString(), editText_content.getText().toString(), Utility.convertSTodD(Utility.getCurrentlyDate()),getTextViewColor()));
                 } else {
-                    Utility.updateNote(DetailActivity.this, new Note(note.getId(), editText_title.getText().toString(), editText_content.getText().toString(), Utility.convertSTodD(Utility.getCurrentlyDate())));
+                    Utility.updateNote(DetailActivity.this, new Note(note.getId(), editText_title.getText().toString(), editText_content.getText().toString(), Utility.convertSTodD(Utility.getCurrentlyDate()),getTextViewColor()));
 
                 }
-                colorNoteDialog();
-
-                /*i = new Intent(DetailActivity.this, MainActivity.class);
+                i = new Intent(DetailActivity.this, MainActivity.class);
                 startActivity(i);
-                */
+
                 break;
             case R.id.consoleDoc:
                 i = new Intent(DetailActivity.this, MainActivity.class);
                 startActivity(i);
                 break;
             case R.id.share_note:
-                // if (note.getTitle() != null || note.getNoteContain() != null) {
                 if (note != null) {
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
@@ -150,9 +146,6 @@ public class DetailActivity extends AppCompatActivity {
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, note.getTitle());
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
-                } else {
-                    //   Toast.makeText(this, "www", Toast.LENGTH_LONG).show();
-
                 }
                 break;
             default:

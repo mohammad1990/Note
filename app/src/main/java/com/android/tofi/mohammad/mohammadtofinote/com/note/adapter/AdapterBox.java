@@ -34,13 +34,13 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
     public AdapterBox(Context context, ItemOnClick ItemOnClick) {
 
         SharedPreferences prefs = context.getSharedPreferences("sortPre", MODE_PRIVATE);
-        String restoredText = prefs.getString("sortValue", null);
+        String restoredText = prefs.getString("sortValue", "Date");
         if (restoredText != null) {
             SortedList(restoredText);
         }
         mItemOnClick = ItemOnClick;
         mContext = context;
-        if (Utility.getNotes(context) != null) {
+        if (Utility.getNotes(context) != null ) {
             mNote.addAll(Utility.getNotes(context));
             // this.filterList.addAll(Utility.getNotes(context));
         }
@@ -127,6 +127,7 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         holder.noteTitle.setText(note.getTitle());
         holder.noteDate.setText(Utility.convertDToS(note.getDate()));
         holder.noteContain.setText(note.getNoteContain());
+        holder.cv.setBackgroundColor(note.getNoteColor());
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

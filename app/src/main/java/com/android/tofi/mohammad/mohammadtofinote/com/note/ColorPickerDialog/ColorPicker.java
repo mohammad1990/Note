@@ -110,6 +110,7 @@ public class ColorPicker {
         colors.add(HSVColor(157, 52f, 79f));
         colors.add(HSVColor(24, 52f, 79f));
         colors.add(HSVColor(287, 52f, 79f));
+        colors.add(HSVColor(0f, 0f, 1f));
         return colors;
     }
 

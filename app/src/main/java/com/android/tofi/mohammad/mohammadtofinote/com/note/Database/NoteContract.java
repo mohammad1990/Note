@@ -37,6 +37,7 @@ public class NoteContract {
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_CONTAIN = "contain";
         public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_COLOR = "color";
 
         public static Uri buildNoteUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

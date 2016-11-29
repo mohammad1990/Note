@@ -7,8 +7,8 @@
     android:elevation="4dp"
     android:minHeight="?attr/actionBarSize">
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:visibility="gone"
         android:layout_gravity="center"
         android:id="@+id/toolbar_title" />
