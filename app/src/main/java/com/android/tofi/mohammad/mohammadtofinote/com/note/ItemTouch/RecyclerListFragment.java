@@ -2,7 +2,6 @@ package com.android.tofi.mohammad.mohammadtofinote.com.note.ItemTouch;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,17 +11,13 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.tofi.mohammad.mohammadtofinote.DetailActivity;
-
-import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemOnClick;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.OnStartDragListener;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.SimpleItemTouchHelperCallback;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter.AdapterBox;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemOnClick;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.SimpleItemTouchHelperCallback;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Utitlity.Utility;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -30,8 +25,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class RecyclerListFragment extends Fragment implements ItemOnClick {

@@ -16,17 +16,21 @@ public class Note implements Parcelable {
     private String title;
     private Date date;
     private String noteContain;
+    private int noteColor;
 
-    public Note(int id, String title, String noteContain, Date date) {
+    public Note(int id, String title, String noteContain, Date date, int noteColor) {
         this.id = id;
         this.title = title;
         this.date = date;
         this.noteContain = noteContain;
+        this.noteColor = noteColor;
     }
-    public Note(String title, String noteContain, Date date) {
+
+    public Note(String title, String noteContain, Date date, int noteColor) {
         this.title = title;
         this.date = date;
         this.noteContain = noteContain;
+        this.noteColor = noteColor;
     }
 
 
@@ -65,6 +69,14 @@ public class Note implements Parcelable {
         this.date = date;
     }
 
+    public int getNoteColor() {
+        return noteColor;
+    }
+
+    public void setNoteColor(int noteColor) {
+        this.noteColor = noteColor;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -73,11 +85,10 @@ public class Note implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
-
         dest.writeString(Utility.convertDToS(date));
-
         dest.writeInt(id);
         dest.writeString(noteContain);
+        dest.writeInt(noteColor);
     }
 
     private Note(Parcel in) {
@@ -85,6 +96,7 @@ public class Note implements Parcelable {
         this.date = Utility.convertSTodD(in.readString());
         this.id = in.readInt();
         this.noteContain = in.readString();
+        this.noteColor = in.readInt();
     }
 
     public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {

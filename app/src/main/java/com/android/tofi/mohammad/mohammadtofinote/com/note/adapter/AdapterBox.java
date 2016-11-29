@@ -1,37 +1,24 @@
 package com.android.tofi.mohammad.mohammadtofinote.com.note.Adapter;
 
-import android.app.Activity;
-import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.tofi.mohammad.mohammadtofinote.R;
+import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemOnClick;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemTouchHelperAdapter;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.ItemTouchHelperViewHolder;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.HelperTouchRecyclerList.OnStartDragListener;
 import com.android.tofi.mohammad.mohammadtofinote.com.note.Utitlity.Utility;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.Database.NoteDBHelper;
-import com.android.tofi.mohammad.mohammadtofinote.com.note.Entity.Note;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import static android.R.attr.filter;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -47,13 +34,13 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
     public AdapterBox(Context context, ItemOnClick ItemOnClick) {
 
         SharedPreferences prefs = context.getSharedPreferences("sortPre", MODE_PRIVATE);
-        String restoredText = prefs.getString("sortValue", null);
+        String restoredText = prefs.getString("sortValue", "Date");
         if (restoredText != null) {
             SortedList(restoredText);
         }
         mItemOnClick = ItemOnClick;
         mContext = context;
-        if (Utility.getNotes(context) != null) {
+        if (Utility.getNotes(context) != null ) {
             mNote.addAll(Utility.getNotes(context));
             // this.filterList.addAll(Utility.getNotes(context));
         }
@@ -140,6 +127,7 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
         holder.noteTitle.setText(note.getTitle());
         holder.noteDate.setText(Utility.convertDToS(note.getDate()));
         holder.noteContain.setText(note.getNoteContain());
+        holder.cv.setBackgroundColor(note.getNoteColor());
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
