@@ -86,7 +86,7 @@ public class RecyclerListFragment extends Fragment implements ItemOnClick {
             EventBus.getDefault().register(this);
         }
         adapter.setMyList();
-        // adapter.notifyDataSetChanged();
+         //adapter.notifyDataSetChanged();
     }
 
     @Override
