@@ -161,6 +161,8 @@ public class AdapterBox extends RecyclerView.Adapter<AdapterBox.NoteViewHolder> 
     }
 
     public void setMyList() {
+        mNote.clear();
+        notifyDataSetChanged();
         mNote.addAll(Utility.getNotes(mContext)); // reload the items from database
     }
 
